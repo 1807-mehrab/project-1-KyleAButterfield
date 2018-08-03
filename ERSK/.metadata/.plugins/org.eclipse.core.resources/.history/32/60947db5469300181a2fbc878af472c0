@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>ERSK</title>
+</head>
+<body>
+
+	<h2>Please Login</h2>
+	<form action="login" method="post">
+		<label>Username</label>
+		<input type="text" name ="username">
+		<br>
+		<label>Password</label>
+		<input type="password" name="password">
+		<input type="submit" value="LOGIN">
+		
+		<br>
+		<a href="ManagerLogin">Click Here to Login If you are a Manager</a>
+	</form>
+
+
+</body>
+</html>

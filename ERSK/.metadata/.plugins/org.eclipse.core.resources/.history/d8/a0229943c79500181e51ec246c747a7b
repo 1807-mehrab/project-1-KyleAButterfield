@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>ERSK-Home Page</title>
+	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+	<div id="dashboard" class="container-fluid">
+	 <ul class="navbar-nav" id="navbar" style:"text-deocration="none">
+	 <li class="nav-item"><input type="button" onClick="Logout()" value="Log Out"></li>
+	 <li class="nav-item"><input type="button" onClick="HomePage()" value="Home"></li>
+	 <li class="nav-item"><input type="button" onClick ="GetInfo()" value="User Profile"></li>
+	 <li class="nav-item"><input type="button" onClick="LoadUsersRequests()" value="Requests"></li> 
+	</ul>
+	</nav>
+	</div>
+	<link href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div id="body">
+	<h2>Welcome to ERSK</h2>
+	<p>The Employee Resimbursement System of Kyle(ERSK), is a fully function Reimbursement System.
+	 You can add requests, update your information, upload an image to your requests and see which are still pending
+	 or which ones have been resolved.   </p>
+	
+	</div>
+	
+	<script src="functions.js"></script>
+	<script> src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"</script> 
+</body>
+
+</html>

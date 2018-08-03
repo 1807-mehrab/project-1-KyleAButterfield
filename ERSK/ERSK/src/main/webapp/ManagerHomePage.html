@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>ERSK-Home Page</title>
+
+	<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    
+    <ul class="nav navbar-nav">
+      <li><a onClick="AdminLogout()">Log Out</a></li>
+      <li><a onClick="HomePage()" >Home</a></li>
+      <li><a onClick ="GetInfo()">Admin Profile</a></li>
+      <li><a onClick="GetAllEmployees()">List Employees</a></li>
+      <li><a onClick="LoadAdminRequestPage()">Requests</a></li>
+    </ul>
+  </div>
+</nav>
+	<link href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div id="body" class="container">
+	<h2>Welcome to ERSK</h2>
+	<p>The Employee Resimbursement System of Kyle(ERSK), is a fully functional Reimbursement System.
+	 You can approve or deny requests, update your information,  and see all requests which are still pending
+	 or which ones have been resolved.   </p>
+	
+	</div>
+	<div id="lower">
+	</div>
+	<script src="Adminfunctions.js"></script>
+	<script> src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"</script> 
+</body>
+
+</html>

@@ -1,0 +1,137 @@
+package com.revature.dao;
+
+import java.sql.Blob;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLSyntaxErrorException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.revature.beans.Image;
+import com.revature.util.ConnectionUtil;
+
+
+public class ImageDAO {
+	
+	
+
+	public boolean detectImages(int ID) {
+		PreparedStatement ps = null;
+		ArrayList<Integer> IDCOUNT = new ArrayList<Integer>();
+		
+		try(Connection conn = ConnectionUtil.getConnection()){
+			
+			String sql = "SELECT * FROM IMAGES WHERE Image_ID = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, ID);
+			ResultSet rs = null;
+			
+				rs=ps.executeQuery();
+				while (rs.next()) {
+					Integer imgid = rs.getInt("Image_ID");
+					IDCOUNT.add(imgid);
+				}
+			
+				
+			
+			
+				rs.close();
+ 				ps.close();
+			}catch (Exception ex) {
+				ex.getMessage();
+			}
+		
+		if(IDCOUNT.size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public List<Image> getImagesByReimburseID(int ID) {
+		int Image_ID;
+		ArrayList<Image> ImageLIST = new ArrayList<>();
+		Image IMG = null;
+		PreparedStatement ps = null;
+		try(Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "SELECT * FROM IMAGES WHERE Reimburse_ID = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, ID);
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				Image_ID = rs.getInt("Image_ID");			
+		        String image = rs.getString("Image");
+				IMG = new Image(Image_ID,image,ID);
+				ImageLIST.add(IMG);
+			}
+			
+			rs.close();
+			ps.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return ImageLIST;
+	}
+	
+	public Image getImage(int ImageID) {
+		Image IMG = null;
+		PreparedStatement ps = null;
+		try(Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "SELECT * FROM IMAGES WHERE Image_ID = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, ImageID);
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				int Reimburse_ID = rs.getInt("Reimbursement_ID");
+				String image = rs.getString("Image");
+				
+				
+				IMG = new Image(ImageID,image,Reimburse_ID);
+			}
+			
+			rs.close();
+			ps.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return IMG;
+	}
+
+	public boolean createImage(int ReimburseID, String image) {
+
+		Boolean result = false;
+		CallableStatement cs = null;
+		try(Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "{CALL SP_CREATE_IMAGE(?, ?)}";
+			cs = conn.prepareCall(sql);
+			cs.setInt(1, ReimburseID);
+			cs.setString(2, image);
+
+			result = !(cs.execute());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return (result);
+	}
+	
+	public boolean deleteImage(int ImageID) {
+		Boolean result = false;
+		CallableStatement cs = null;
+		try(Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "{CALL SP_DEL_IMAGE(?)}";
+			cs = conn.prepareCall(sql);
+			cs.setInt(1, ImageID);
+			
+			result = !(cs.execute());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return (result);
+	}
+	
+	
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>ERSK-Home Page</title>
+	<div>
+	<input type="button" onClick="AdminLogout()" value="Log Out">
+	<input type="button" onClick="HomePage()" value="Home">
+	 <input type="button" onClick ="GetInfo()" value="Admin Profile">
+	 <input type="button" onClick="ViewAllEmployees()" value="List Employees">
+	<input type="button" onClick="LoadAdminRequestPage()" value="Requests"> 
+	</div>
+	<script src="Adminfunctions.js"></script>
+</head>
+<body>
+	<div id="body">
+	<h2>Welcome to ERSK</h2>
+	<p>The Employee Resimbursement System of Kyle(ERSK), is a fully functional Reimbursement System.
+	 You can approve or deny requests, update your information,  and see all requests which are still pending
+	 or which ones have been resolved.   </p>
+	
+	</div>
+	<div id="lower">
+	</div>
+	
+</body>
+
+</html>

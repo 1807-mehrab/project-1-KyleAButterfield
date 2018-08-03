@@ -1,0 +1,629 @@
+function login(){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200){
+			let result = JSON.parse(xhr.responseText).result;
+			window.location = "http//localhost:8888/ERSK/EmployeeHomePage.html";
+		}
+	}
+	let username = document.getElementById("username").elements.item(0).value;
+	let password = document.getElementById("password").elements.item(1).value;
+	xhr.open('POST', 'http://localhost:8888/ERSK/Login');
+	let json = JSON.stringify({
+		username : username,
+		pasword : password
+	});
+	xhr.send(json);
+}
+function AdminLogout(){
+	window.location = 'http://localhost:8888/ERSK/adminLogout';
+	
+}
+
+function GetAllEmployees(){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200){
+			let result = JSON.parse(xhr.responseText);
+			let employees = result[0];
+			let managers = result[1];
+			var employeeText = ``;
+			var managerText = ``;
+			for (var i=0; i<employees.length; i++) { 
+				
+			}
+			
+			for (var i=0; i<managers.length; i++) { 
+				
+			}
+			
+		}
+	}
+	xhr.open('POST','http://localhost:8888/ERSK/getAllEmployees');
+	xhr.send();
+}
+
+function GetInfo(){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200){
+			let result = JSON.parse(xhr.responseText);
+			let address = result.address;
+			let phone = result.phone;
+			document.getElementById('body').innerHTML=`
+			<H1> This is your info </H1>
+			<p>Address `+address+`</p>
+			<p>Phone -`+phone+ `</p>
+			<div> 
+			<input type="button" onClick="ToUpdateInfo()" value="Update Info">
+			</div>`
+			
+		}
+	}
+	xhr.open('POST', 'http://localhost:8888/ERSK/getAdminInfo');
+	xhr.send();
+	
+}
+function ToUpdateInfo(){
+	document.getElementById('body').innerHTML=`
+		<H1>Please Update your information.
+		 Only put numerical values for your phone number</H2>
+		 <form id="infoForm">
+		 <label>Address</label>
+		<input type="text" name ="address">
+		<br>
+		<label>Phone</label>
+		<input type="number" name="phone number">
+		<div> 
+			<input type="button" onClick="UpdateInfo()" value="Update Info">
+		</div>
+		</form>`
+}
+function UpdateInfo(){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+	if(this.readyState == 4 && this.status == 200){
+		GetInfo();
+		}
+	}
+	let address = document.getElementById('infoForm').elements.item(0).value;
+	let phone = document.getElementById('infoForm').elements.item(1).value;
+	let json = JSON.stringify({
+		address : address,
+		phone : phone,
+		adminID: 0
+	});
+	xhr.open('POST', 'http://localhost:8888/ERSK/updateAdminInfo')
+	xhr.send(json);
+}
+function HomePage(){
+	document.getElementById('body').innerHTML=`
+	<h2>Welcome to ERSK</h2>
+	<p>The Employee Resimbursement System of Kyle(ERSK), is a fully functional Reimbursement System.
+	 You can approve or deny requests, update your information,  and see all requests which are still pending
+	 or which ones have been resolved.   </p>`
+}
+
+function LoadAdminRequestPage(){
+	document.getElementById('body').innerHTML = `
+	<h3>From here you can view all requests of every user, all pending, denied or resolved requests.
+	For look up requests based off of an Employees ID</h3>
+	<div>
+	   <input type="button" onClick="LoadAllRequests()" value="View All">
+	   <input type="button" onClick="LoadAllPendingRequests()" value="View Pending">
+	   <input type="button" onClick="LoadAllDeniedRequests()" value="View Denied">
+       <input type="button" onClick="LoadAllResolvedRequests()" value="View Resolved">
+	   <input type="button" onClick="SearchSpecific()" value="Search By ID">
+	</div>`;
+}
+
+function LoadAllRequests(){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200) {
+			 var ticketlist = ``;
+	           var tickets = JSON.parse(xhr.responseText);
+	           //console.log(ticket[1]);
+
+	           // this is not working into a table.
+	           for (var i=0; i<tickets.length; i++) {              
+	        	   let json = JSON.stringify({
+	        			requestID : tickets[i].requestID,
+	        			description : tickets[i].description,
+	        			amount : tickets[i].amount,
+	        			status : tickets[i].status,
+	        			userId : tickets[i].userId
+	        		});
+	        	   if(tickets[i].status === "Pending"){
+		        	   
+	        		   ticketlist += `
+			               <tr>
+			                   <td>${tickets[i].requestID}</td>
+			                   <td>${tickets[i].description}</td>
+			                   <td>$ ${tickets[i].amount}</td>
+			                   <td>${tickets[i].status}</td>
+			                   <td>${tickets[i].userId}</td>
+			                   <td><button type="button" onClick='TakeAction(${json})'>Take Action</button></td>
+			               </tr>`;   
+	        	   }else{
+	        		   ticketlist += `
+	    	               <tr>
+	    	                   <td>`+tickets[i].requestID+`</td>
+	    	                   <td>`+tickets[i].description+`</td>
+	    	                   <td>$ `+tickets[i].amount+`</td>
+	    	                   <td>`+tickets[i].status+`</td>
+	    	                   <td>`+tickets[i].userId+`</td>
+	    	               </tr>`;
+	        	   }
+	           }
+	           document.getElementById('body').innerHTML =
+	           `<table class="table table-striped">
+	               <caption>Your Reimbursements Requests:</caption>
+	               <thead>
+	                   <th>Request Id</th>
+	                   <th>Description</th>
+	                   <th>Amount</th>
+	                   <th>Status</th>
+	                   <th>User Id</th>
+	                   <th>Action</th>
+	                   <th>Image</th>
+	               </thead>
+	               <tbody>`
+	               +ticketlist+
+	               `</tbody>
+	           </table>
+	           	<div>
+	               <input type="button" onClick="LoadAllRequests()" value="View All">
+	               <input type="button" onClick="LoadAllPendingRequests()" value="View Pending">
+	               <input type="button" onClick="LoadAllDeniedRequests()" value="View Denied">
+	               <input type="button" onClick="LoadAllResolvedRequests()" value="View Resolved">
+	               <input type="button" onClick="SearchSpecific()" value="Search By ID">
+	            </div>`;
+		}
+
+	}
+	xhr.open('POST','http://localhost:8888/ERSK/getEveryRequest');
+	xhr.send();
+}
+
+function LoadAllPendingRequests(){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200) {
+			 var ticketlist = ``;
+	           var tickets = JSON.parse(xhr.responseText);
+	           //console.log(ticket[1]);
+
+	           // this is not working into a table.
+	           for (var i=0; i<tickets.length; i++) {              
+	        	   let json = JSON.stringify({
+	        			requestID : tickets[i].requestID,
+	        			description : tickets[i].description,
+	        			amount : tickets[i].amount,
+	        			status : tickets[i].status,
+	        			userId : tickets[i].userId
+	        		});
+	        	   
+		        	   ticketlist += `
+			               <tr>
+			                   <td>${tickets[i].requestID}</td>
+			                   <td>${tickets[i].description}</td>
+			                   <td>$ ${tickets[i].amount}</td>
+			                   <td>${tickets[i].status}</td>
+			                   <td>${tickets[i].userId}</td>
+			                   <td><button type="button" onClick='TakeAction(${json})'>Take Action</button></td>
+			               </tr>`;   
+	        	   
+	        	   
+	                
+	           }
+	           document.getElementById('body').innerHTML =
+	           `<table class="table table-striped">
+	               <caption>Your Reimbursements Requests:</caption>
+	               <thead>
+	        	   	   <th>Request Id</th>
+	                   <th>Description</th>
+	                   <th>Amount</th>
+	                   <th>Status</th>
+	                   <th>User Id</th>
+	                   <th>Image</th>
+	               </thead>
+	               <tbody>`
+	               +ticketlist+
+	               `</tbody>
+	           </table>
+	           	<div>
+	               <input type="button" onClick="LoadAllRequests()" value="View All">
+	               <input type="button" onClick="LoadAllPendingRequests()" value="View Pending">
+	               <input type="button" onClick="LoadAllDeniedRequests()" value="View Denied">
+	               <input type="button" onClick="LoadAllResolvedRequests()" value="View Resolved">
+	               <input type="button" onClick="SearchSpecific()" value="Search By ID">
+	            </div>`;
+		}
+
+	}
+	xhr.open('POST','http://localhost:8888/ERSK/getEveryPendingRequest');
+	xhr.send();
+}
+
+function LoadAllDeniedRequests(){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200) {
+			 var ticketlist = ``;
+	           var tickets = JSON.parse(xhr.responseText);
+	           //console.log(ticket[1]);
+
+	           // this is not working into a table.
+	           for (var i=0; i<tickets.length; i++) {              
+	               ticketlist += `
+	               <tr>
+	                   <td>`+tickets[i].requestID+`</td>
+	                   <td>`+tickets[i].description+`</td>
+	                   <td>$ `+tickets[i].amount+`</td>
+	                   <td>`+tickets[i].status+`</td>
+	                   <td>`+tickets[i].userId+`</td>
+	               </tr>`;
+	                console.log(tickets[i]);
+	           }
+	           document.getElementById('body').innerHTML =
+	           `<table class="table table-striped">
+	               <caption>Your Reimbursements Requests:</caption>
+	               <thead>
+	                   <th>Request Id</th>
+	                   <th>Description</th>
+	                   <th>Amount</th>
+	                   <th>Status</th>
+	                   <th>User Id</th>
+	                   <th>Image</th>
+	               </thead>
+	               <tbody>`
+	               +ticketlist+
+	               `</tbody>
+	           </table>
+	           	<div>
+	               <input type="button" onClick="LoadAllRequests()" value="View All">
+	               <input type="button" onClick="LoadAllPendingRequests()" value="View Pending">
+	               <input type="button" onClick="LoadAllDeniedRequests()" value="View Denied">
+	               <input type="button" onClick="LoadAllResolvedRequests()" value="View Resolved">
+	               <input type="button" onClick="SearchSpecific()" value="Search By ID">
+	            </div>`;
+		}
+
+	}
+	xhr.open('POST','http://localhost:8888/ERSK/getEveryDeniedRequest');
+	xhr.send();
+}
+
+function LoadAllResolvedRequests(){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200) {
+			 var ticketlist = ``;
+	           var tickets = JSON.parse(xhr.responseText);
+	           //console.log(ticket[1]);
+
+	           // this is not working into a table.
+	           for (var i=0; i<tickets.length; i++) {              
+	               ticketlist += `
+	               <tr>
+	                   <td>`+tickets[i].requestID+`</td>
+	                   <td>`+tickets[i].description+`</td>
+	                   <td>$ `+tickets[i].amount+`</td>
+	                   <td>`+tickets[i].status+`</td>
+	                   <td>`+tickets[i].userId+`</td>
+	               </tr>`;
+	                console.log(tickets[i]);
+	           }
+	           document.getElementById('body').innerHTML =
+	           `<table class="table table-striped">
+	               <caption>Your Reimbursements Requests:</caption>
+	               <thead>
+	                   <th>Request Id</th>
+	                   <th>Description</th>
+	                   <th>Amount</th>
+	                   <th>Status</th>
+	                   <th>User Id</th>
+	                   <th>Image</th>
+	               </thead>
+	               <tbody>`
+	               +ticketlist+
+	               `</tbody>
+	           </table>
+	           	<div>
+	               <input type="button" onClick="LoadAllRequests()" value="View All">
+	               <input type="button" onClick="LoadAllPendingRequests()" value="View Pending">
+	               <input type="button" onClick="LoadAllDeniedRequests()" value="View Denied">
+	               <input type="button" onClick="LoadAllResolvedRequests()" value="View Resolved">
+	               <input type="button" onClick="SearchSpecific()" value="Search By ID">
+	            </div>`;
+		}
+
+	}
+	xhr.open('POST','http://localhost:8888/ERSK/getEveryResolvedRequest');
+	xhr.send();
+}
+
+
+
+function SearchSpecific(){
+	document.getElementById('body').innerHTML =`
+		 <form id="searchForm">
+		 <label>Users Id</label>
+		<input type="number" id="usersId">
+		
+		<div> 
+			<input type="button" onClick="PassUserIDAll()" value="View All">
+			<input type="button" onClick="PassUserIDAllPending()" value="View Pending">
+			<input type="button" onClick="PassUserIDAllDenied()" value="View Denied">
+			<input type="button" onClick="PassUserIDAllResolved()" value="View Resolved">
+		</div>
+		</form>
+	`;
+}
+
+function PassUserIDAll(){
+	let userId = document.getElementById("searchForm").elements.item(0).value;	
+	LoadUsersRequests(userId);
+}
+
+function LoadUsersRequests(usersId){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200) {
+			 var ticketlist = ``;
+	           var tickets = JSON.parse(xhr.responseText);
+	           //console.log(ticket[1]);
+
+	           // this is not working into a table.
+	           for (var i=0; i<tickets.length; i++) {              
+	               ticketlist += `
+	               <tr>
+	                   <td>`+tickets[i].requestID+`</td>
+	                   <td>`+tickets[i].description+`</td>
+	                   <td>$ `+tickets[i].amount+`</td>
+	                   <td>`+tickets[i].status+`</td>
+	               </tr>`;
+	                console.log(tickets[i]);
+	           }
+	           document.getElementById('body').innerHTML =
+	           `<table class="table table-striped">
+	               <caption>Your Reimbursements Requests:</caption>
+	               <thead>
+	                   <th>Request Id</th>
+	                   <th>Description</th>
+	                   <th>Amount</th>
+	                   <th>Status</th>
+	                   <th>Image</th>
+	               </thead>
+	               <tbody>`
+	               +ticketlist+
+	               `</tbody>
+	           </table>
+	           <div>
+	               <input type="button" onClick="SearchSpecific()" value="Search By ID">
+	           </div>`;
+		}
+	}
+	
+	
+	xhr.open('POST','http://localhost:8888/ERSK/getAllRequestsForAdmin');
+	xhr.send(usersId);
+}
+
+function PassUserIDAllPending(){
+	let userId = document.getElementById("searchForm").elements.item(0).value;	
+	LoadUserPendingRequests(userId);
+}
+function LoadUserPendingRequests(userId){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200) {
+			 var ticketlist = ``;
+	           var tickets = JSON.parse(xhr.responseText);
+	           for (var i=0; i<tickets.length; i++) {              
+	        	   let json = JSON.stringify({
+	        			requestID : tickets[i].requestID,
+	        			description : tickets[i].description,
+	        			amount : tickets[i].amount,
+	        			status : tickets[i].status,
+	        			userId : tickets[i].userId
+	        		});
+	        	   ticketlist += `
+	               <tr>
+	                   <td>${tickets[i].requestID}</td>
+	                   <td>${tickets[i].description}</td>
+	                   <td>$ ${tickets[i].amount}</td>
+	                   <td>${tickets[i].status}</td>
+	                   <td>${tickets[i].userId}</td>
+	                   <td><button type="button" onClick='TakeAction(${json})'>Take Action</button></td>
+	               </tr>`;
+	               
+	                
+	           }
+	           
+	           document.getElementById('body').innerHTML =
+	           `<table class="table table-striped">
+	               <caption>Your Reimbursements Requests:</caption>
+	               <thead>
+	                   <th>Request Id</th>
+	                   <th>Description</th>
+	                   <th>Amount</th>
+	                   <th>Status</th>
+	                   <th>User Id</th>
+	                   <th>Action</th>
+	                   <th>Image</th>
+	               </thead>
+	               <tbody>`
+	               +ticketlist+
+	               `</tbody>
+	           </table>
+	           <div>
+	               <input type="button" onClick="SearchSpecific()" value="Search By ID">
+	           </div>`;
+		}
+	}
+	xhr.open('POST','http://localhost:8888/ERSK/getAllPendingRequestsForAdmin');
+	xhr.send(userId);
+}
+
+function TakeAction(ticket){
+	
+	document.getElementById('body').innerHTML = `
+	<h4>Request ID: ${ticket.requestID}</h4>
+	<h4>Description: ${ticket.description}</h4>
+	<h4>Amount: ${ticket.amount}</h4>
+	<h4>User ID: ${ticket.userId}</h4>
+	<input type="button" onClick="DenyRequest(${ticket.requestID})" value="Deny Request">
+	<input type="button" onClick="ApproveRequest(${ticket.requestID})" value="Approve Request">
+	`;
+}
+
+function DenyRequest(requestId){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200) {
+			LoadAllDeniedRequests();
+		}
+	}
+	xhr.open('POST','http://localhost:8888/ERSK/denyRequest');
+	xhr.send(requestId);
+}
+
+function ApproveRequest(requestId){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200) {
+			LoadAllResolvedRequests()
+		}
+	}
+	xhr.open('POST','http://localhost:8888/ERSK/approveRequest');
+	xhr.send(requestId);
+}
+
+function PassUserIDAllDenied(){
+	let userId = document.getElementById("searchForm").elements.item(0).value;	
+	LoadUserDeniedRequests(userId);
+}
+
+function LoadUserDeniedRequests(userId){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200) {
+			 var ticketlist = ``;
+	           var tickets = JSON.parse(xhr.responseText);
+	           //console.log(ticket[1]);
+
+	           // this is not working into a table.
+	           for (var i=0; i<tickets.length; i++) {              
+	               ticketlist += `
+	               <tr>
+	                   <td>`+tickets[i].requestID+`</td>
+	                   <td>`+tickets[i].description+`</td>
+	                   <td>$ `+tickets[i].amount+`</td>
+	                   <td>`+tickets[i].status+`</td>
+	               </tr>`;
+	                console.log(tickets[i]);
+	           }
+	           document.getElementById('body').innerHTML =
+	           `<table class="table table-striped">
+	               <caption>Your Reimbursements Requests:</caption>
+	               <thead>
+	                   <th>Request Id</th>
+	                   <th>Description</th>
+	                   <th>Amount</th>
+	                   <th>Status</th>
+	                   <th>Image</th>
+	               </thead>
+	               <tbody>`
+	               +ticketlist+
+	               `</tbody>
+	           </table>
+	           <div>
+	               <input type="button" onClick="SearchSpecific()" value="Search By ID">
+	           </div>`;
+		}
+	}
+	xhr.open('POST','http://localhost:8888/ERSK/getAllDeniedRequestsForAdmin');
+	xhr.send(userId);
+}
+function PassUserIDAllResolved(){
+	let userId = document.getElementById("searchForm").elements.item(0).value;	
+	LoadUserResolvedRequests(userId);
+}
+function LoadUserResolvedRequests(userId){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200) {
+			 var ticketlist = ``;
+	           var tickets = JSON.parse(xhr.responseText);
+	           //console.log(ticket[1]);
+
+	           // this is not working into a table.
+	           for (var i=0; i<tickets.length; i++) {              
+	               ticketlist += `
+	               <tr>
+	                   <td>`+tickets[i].requestID+`</td>
+	                   <td>`+tickets[i].description+`</td>
+	                   <td>$ `+tickets[i].amount+`</td>
+	                   <td>`+tickets[i].status+`</td>
+	               </tr>`;
+	                console.log(tickets[i]);
+	           }
+	           document.getElementById('body').innerHTML =
+	           `<table class="table table-striped">
+	               <caption>Your Reimbursements Requests:</caption>
+	               <thead>
+	                   <th>Request Id</th>
+	                   <th>Description</th>
+	                   <th>Amount</th>
+	                   <th>Status</th>
+	                   <th>Image</th>
+	               </thead>
+	               <tbody>`
+	               +ticketlist+
+	               `</tbody>
+	           </table>
+	           <div>
+	              <input type="button" onClick="SearchSpecific()" value="Search By ID">
+	           </div>`;
+		}
+	}
+	xhr.open('POST','http://localhost:8888/ERSK/getAllResolvedRequestsForAdmin');
+	xhr.send(userId);
+}
+
+function NewRequests(){
+	document.getElementById('body').innerHTML=`
+	 <form id="requestForm">
+		 <label>Description</label>
+		<input type="text" name ="description">
+		<br>
+		<label>Amount</label>
+		<input type="number" name="amount">
+		<br>
+		<div> 
+			<input type="button" onClick="SubmitRequest()" value="Submit Request">
+		</div>
+		</form>`;
+}
+
+function SubmitRequest(){
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200) {
+			LoadUsersRequests();
+		}
+	}
+	let description = document.getElementById('requestForm').elements.item(0).value;
+	let amount = document.getElementById('requestForm').elements.item(1).value;
+	let json = JSON.stringify({
+		requestID : 0,
+		description : description,
+		status : 'Pending',
+		amount : amount,
+		userId : 0
+	});
+	xhr.open('POST','http://localhost:8888/ERSK/submitRequest');
+	xhr.send(json);
+}

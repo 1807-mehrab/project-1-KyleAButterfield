@@ -1,0 +1,206 @@
+package com.revature.dao;
+
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.revature.util.ConnectionUtil;
+
+public class LoginDAO {
+
+	
+	public boolean CheckAdminUsername(String username) {
+		boolean exists = false;
+		
+		PreparedStatement ps = null;
+		
+		List<String> users = new ArrayList<String>();
+		try(Connection conn = ConnectionUtil.getConnection()){
+			String sql = "SELECT USERNAME FROM Admins";
+			
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				String temp = rs.getString("USERNAME");
+				users.add(temp);
+				
+			}
+			
+			
+			rs.close();
+			ps.close();
+		}catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		for(String s:users) {
+			if(username.equals(s)) {
+				
+			}
+				
+		}
+		
+		
+		
+		return exists;
+	}
+	
+	public boolean CheckAdminPassword(String username, String password) {
+		boolean exists = false;
+		
+		PreparedStatement ps = null;
+		String pass = "";
+		
+		try(Connection conn = ConnectionUtil.getConnection()){
+			String sql = "SELECT Password FROM Admin_Login_Credentials WHERE Username =?";
+			
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, username);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				pass = rs.getString("Password");
+				
+				
+			}
+			
+			
+			rs.close();
+			ps.close();
+		}catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		if(pass.equals(password)) exists = true;
+		
+		return exists;
+	}
+	
+	public boolean CheckUserUsername(String username) {
+		boolean exists = false;
+		
+		PreparedStatement ps = null;
+		
+		
+		List<String> users = new ArrayList<String>();
+		try(Connection conn = ConnectionUtil.getConnection()){
+			String sql = "SELECT USERNAME FROM User_Login_Credentials";
+			
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				String temp = rs.getString("USERNAME");
+				users.add(temp);
+				
+			}
+			
+			
+			rs.close();
+			ps.close();
+		}catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		for(String s:users) {
+			if(username.equals(s)) {
+				exists = true;
+			}
+				
+		}
+		
+		
+		
+		return exists;
+	}
+	
+	public boolean CheckUserPassword(String username, String password) {
+	boolean exists = false;
+		
+		PreparedStatement ps = null;
+		String pass = "";
+		
+		try(Connection conn = ConnectionUtil.getConnection()){
+			String sql = "SELECT Password FROM User_Login_Credentials WHERE Username =?";
+			
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, username);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				pass = rs.getString("Password");
+				
+				
+			}
+			
+			
+			rs.close();
+			ps.close();
+		}catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		if(pass.equals(password)) exists = true;
+		
+		return exists;
+	}
+	public int getUserID(String username) {
+		PreparedStatement ps = null;
+		int id = 0;
+		
+		try(Connection conn = ConnectionUtil.getConnection()){
+			String sql = "SELECT User_ID FROM User_Login_Credentials WHERE Username =?";
+			
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, username);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				id = rs.getInt("User_ID");
+				
+				
+			}
+			
+			
+			rs.close();
+			ps.close();
+		}catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		
+		return id;
+	}
+	
+	public int getAdminID(String username) {
+		PreparedStatement ps = null;
+		int id = 0;
+		
+		try(Connection conn = ConnectionUtil.getConnection()){
+			String sql = "SELECT User_ID FROM Admin_Login_Credentials WHERE Username =?";
+			
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, username);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				id = rs.getInt("User_ID");
+				
+				
+			}
+			
+			
+			rs.close();
+			ps.close();
+		}catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		
+		return id;
+	}
+}

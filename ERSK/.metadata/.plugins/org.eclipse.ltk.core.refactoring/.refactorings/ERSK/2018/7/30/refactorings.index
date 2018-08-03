@@ -1,0 +1,17 @@
+1532464096521	Delete element
+1532464108067	Delete element
+1532464156625	Move 'UserInfoDOA.java' to 'dao'
+1532464265325	Rename resource 'ReimbursementRequestDOA.java'
+1532464274096	Rename resource 'UserInfoDOA.java'
+1532464283812	Rename resource 'LoginDOA.java'
+1532532101480	Delete element
+1532532107813	Delete element
+1532532147371	Move 'UserDAO.java' to 'dao'
+1532561285683	Move 'com' to 'Java'
+1532561328900	Rename resource 'Java'
+1532561524725	Move 'ConnectionUtil.java' to 'util'
+1532563613146	Encapsulate field 'userId'
+1532616326942	Encapsulate field 'requestID'
+1532706944781	Move 'Index.html' to 'WEB-INF'
+1532706950329	Move 'Index.html' to 'webapp'
+1532712050789	Delete element

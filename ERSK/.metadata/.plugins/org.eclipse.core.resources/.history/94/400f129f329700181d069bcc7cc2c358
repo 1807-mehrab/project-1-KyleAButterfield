@@ -1,0 +1,17 @@
+package com.revature.test;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+import com.revature.dao.AdminDAO;
+
+public class DaoTesting {
+	@Test
+	public void testAdminFirstName() {
+		AdminDAO adao = new AdminDao();
+		int passId = 1;
+		String expected = "Kyle";
+		assertEquals(expected, adao.getFirstName(passId));
+	}
+}

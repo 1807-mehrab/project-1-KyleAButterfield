@@ -1,0 +1,38 @@
+package com.revature.beans;
+
+import java.sql.Blob;
+
+public class Image {
+	private int imageId;
+	private byte[] image;
+	private int reimburseId;
+	
+	public Image(Integer imageId, byte[] image, Integer reimburseId) {
+		super();
+		this.imageId = imageId;
+		this.image = image;
+		this.reimburseId = reimburseId;
+	}
+	public Integer getImageId() {
+		return imageId;
+	}
+	public void setImageId(Integer imageId) {
+		this.imageId = imageId;
+	}
+	public byte[] getImage() {
+		return image;
+	}
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+	public Integer getReimburseId() {
+		return reimburseId;
+	}
+	public void setReimburseId(Integer reimburseId) {
+		this.reimburseId = reimburseId;
+	}
+	
+	
+	
+	
+}

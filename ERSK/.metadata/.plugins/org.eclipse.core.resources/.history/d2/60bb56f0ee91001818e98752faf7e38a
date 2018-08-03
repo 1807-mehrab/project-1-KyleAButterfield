@@ -1,0 +1,25 @@
+package com.revature.servlets;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.dao.UserInfoDAO;
+
+public class getUserInfoServlet {
+	protected void doPost (HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException{
+		HttpSession session = req.getSession();
+		UserInfoDAO uidao = new UserInfoDAO();
+		ObjectMapper mapper = new ObjectMapper();
+		
+		int id = (int) session.getAttribute("id");
+		String address = uidao.getAddress(id);
+		int phone = uidao.getPhone(id);
+		
+	}
+}

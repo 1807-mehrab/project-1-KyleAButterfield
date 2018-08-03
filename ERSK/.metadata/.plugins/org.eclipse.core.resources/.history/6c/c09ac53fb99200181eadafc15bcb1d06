@@ -1,0 +1,36 @@
+package com.revature.beans;
+
+public class UserInfo {
+	private String Address;
+	private long Phone;
+	private int userID;
+	
+	public UserInfo() {
+		
+	}
+	
+	public UserInfo(String address, long phone2, int userID) {
+		super();
+		Address = address;
+		Phone = phone2;
+		this.userID = userID;
+	}
+	public String getAddress() {
+		return Address;
+	}
+	public void setAddress(String address) {
+		Address = address;
+	}
+	public long getPhone() {
+		return Phone;
+	}
+	public void setPhone(int phone) {
+		Phone = phone;
+	}
+	public int getUserID() {
+		return userID;
+	}
+	public void setUserID(int userID) {
+		this.userID = userID;
+	}
+}

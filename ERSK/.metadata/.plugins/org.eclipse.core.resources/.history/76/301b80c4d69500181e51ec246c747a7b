@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>ERSK-Manager</title>
+<link href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+	<h2>Please Login</h2>
+	<form action="adminLogin" method="post">
+		<label>Username</label>
+		<input type="text" name ="username">
+		<br>
+		<label>Password</label>
+		<input type="password" name="password">
+		<input type="submit" value="LOGIN">
+		<a href="Index.html">Click Here to Login If you are an Employee</a>
+	</form>
+	</div>
+<script> src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"</script> 
+</body>
+</html>

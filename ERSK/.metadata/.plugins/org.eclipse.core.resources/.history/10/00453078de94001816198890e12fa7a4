@@ -1,0 +1,28 @@
+package com.revature.servlets;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.revature.beans.Admin;
+import com.revature.beans.User;
+import com.revature.dao.AdminDAO;
+import com.revature.dao.UserDAO;
+
+@WebServlet(name ="GetAllEmployees", urlPatterns=("/getAllEmployees"))
+public class GetAllEmployeesServlet {
+	
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		UserDAO udao = new UserDAO();
+		AdminDAO adao = new AdminDAO();
+		List<User> users = udao.getAllUsers();
+		List<Admin> admins = adao.getAllAdmins();
+		PrintWriter pw = resp.getWriter();
+	}
+}
